@@ -1,3 +1,9 @@
+import { AddNumForm } from "./components/addNumForm/AddNumForm";
+
 export default function Home() {
-  return <div>Home</div>;
+  return (
+    <div>
+      <AddNumForm />
+    </div>
+  );
 }
