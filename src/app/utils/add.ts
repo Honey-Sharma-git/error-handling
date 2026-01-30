@@ -3,10 +3,11 @@
  *
  * A utility to add two finite numbers
  *
- * @param a a finite number.
- * @param b a finite number.
+ * @param a finite number.
+ * @param b finite number.
  * @returns sum of a and b
  * @throws {RangeError} If either argument is NaN or not finite.
+ * @throws {TypeError} If either argument is non-numeric.
  */
 export function addNum(a: number, b: number): number {
   // Check if arguments are non-numeric:
