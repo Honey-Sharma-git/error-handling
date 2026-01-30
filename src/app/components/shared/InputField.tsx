@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { memo, useId } from "react";
 
 interface Props {
   type?: string;
@@ -26,13 +26,13 @@ interface ClassName {
  *
  * Features:
  * - It has optional label and input field.
- * - The container, label and input filed styling is customizable.
+ * - The container, label, errorMessage and input filed styling is customizable.
  * - It can display error message under input field.
  *
  * @param props
  * @returns JSX
  */
-export function InputField(props: Props) {
+export const InputField = memo(function InputField(props: Props) {
   const { type, label, placeholder, className, errorMessage, value, onChange } =
     props;
   const { inputClasses, labelClasses, containerClasses, errorMessageClasses } =
@@ -66,4 +66,4 @@ export function InputField(props: Props) {
       )}
     </div>
   );
-}
+});
