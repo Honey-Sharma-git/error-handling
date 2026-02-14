@@ -2,8 +2,8 @@ import { AddNumForm } from "./components/addNumForm/AddNumForm";
 
 export default function Home() {
   return (
-    <div>
+    <main className="p-2 min-h-dvh grid place-content-center">
       <AddNumForm />
-    </div>
+    </main>
   );
 }

@@ -123,7 +123,7 @@ export function AddNumForm() {
   }, []);
 
   return (
-    <div className="m-2 border shadow rounded-lg flex flex-col gap-4 items-center justify-center p-4 w-100">
+    <article className="border border-gray-100 shadow-md rounded-lg flex flex-col gap-4 items-center justify-center p-4">
       <form>
         <fieldset>
           <legend className="w-full text-center font-bold text-amber-600 mb-5">
@@ -159,7 +159,7 @@ export function AddNumForm() {
               errorMessage={fieldErrors.secondNum}
             />
 
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-row flex-wrap justify-center items-center gap-4">
               <button
                 onClick={calculateSum}
                 type="button"
@@ -180,9 +180,9 @@ export function AddNumForm() {
         </fieldset>
       </form>
 
-      <output className="border-2 border-dotted p-2 w-full text-center">
+      <output className="border-2 border-dashed p-2 w-full text-center">
         {sum ? sum : "Number sum will be displayed here"}
       </output>
-    </div>
+    </article>
   );
 }
