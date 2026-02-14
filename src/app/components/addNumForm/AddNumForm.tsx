@@ -123,18 +123,20 @@ export function AddNumForm() {
   }, []);
 
   return (
-    <article className="border border-gray-100 shadow-md rounded-lg flex flex-col gap-4 items-center justify-center p-4">
+    <article className="shadow-md rounded-lg flex flex-col gap-4 items-center justify-center p-4 bg-card-background">
       <form>
         <fieldset>
-          <legend className="w-full text-center font-bold text-amber-600 mb-5">
+          <legend className="w-full text-center font-bold text-card-heading mb-5">
             Sum Two Numbers
           </legend>
 
           <div className="flex flex-col items-center gap-2">
             <InputField
               className={{
-                labelClasses: "text-pink-600",
-                inputClasses: "border-pink-600 focus-within:outline-pink-600",
+                errorMessageClasses: "text-input-validation-text",
+                labelClasses: "text-label",
+                inputClasses:
+                  "border-input-border focus-within:outline-input-border placeholder:text-input-placeholder text-text-color",
               }}
               label="Enter First Number:"
               placeholder="e.g 3"
@@ -147,8 +149,10 @@ export function AddNumForm() {
 
             <InputField
               className={{
-                labelClasses: "text-pink-600",
-                inputClasses: "border-pink-600 focus-within:outline-pink-600",
+                errorMessageClasses: "text-input-validation-text",
+                labelClasses: "text-label",
+                inputClasses:
+                  "border-input-border focus-within:outline-input-border placeholder:text-input-placeholder text-text-color",
               }}
               label="Enter Second Number:"
               placeholder="e.g 2"
@@ -163,7 +167,7 @@ export function AddNumForm() {
               <button
                 onClick={calculateSum}
                 type="button"
-                className="p-1 px-4 rounded-full cursor-pointer shadow bg-green-300 hover:bg-green-400 w-fit"
+                className="p-1 px-4 rounded-full cursor-pointer shadow bg-cta-button-background hover:bg-cta-button-background-hover w-fit text-cta-button-text"
               >
                 Calculate Sum
               </button>
@@ -171,7 +175,8 @@ export function AddNumForm() {
               <button
                 onClick={reset}
                 type="button"
-                className="p-1 px-4 rounded-full cursor-pointer shadow bg-red-300 hover:bg-red-400 w-fit"
+                className="p-1 px-4 rounded-full cursor-pointer shadow bg-danger-button-background hover:bg-danger-button-background-hover
+                text-danger-button-text w-fit"
               >
                 Reset
               </button>
@@ -180,7 +185,7 @@ export function AddNumForm() {
         </fieldset>
       </form>
 
-      <output className="border-2 border-dashed p-2 w-full text-center">
+      <output className="border-2 text-text-color border-dashed p-2 w-full text-center">
         {sum ? sum : "Number sum will be displayed here"}
       </output>
     </article>
