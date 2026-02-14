@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { InputField } from "../shared/InputField";
 import { addNum } from "@/app/utils/add";
 
@@ -14,6 +14,7 @@ interface FieldErrors {
 }
 
 export function AddNumForm() {
+  // Form value, error and sum states:
   const [formValues, setFormValues] = useState<FormValues>({
     firstNum: "",
     secondNum: "",
@@ -24,15 +25,31 @@ export function AddNumForm() {
   });
   const [sum, setSum] = useState<string>("");
 
+  /**
+   * **handleChange()**
+   * - Tracks values changes to show error on invalid input
+   * - Reset calculated value on value change.
+   * - Update form value state.
+   *
+   * @params form field key and its value
+   * @returns void
+   *
+   */
   const handleChange = useCallback((key: keyof FormValues, value: string) => {
-    const { isError, message } = validateInput(
+    let msg = "";
+    const { message } = validateInput(
       value,
-      /[^0-9]/g,
+      /[^0-9]/,
       "Please enter a valid number",
     );
+    msg = message;
+
+    if (value.trim() === "") {
+      msg = "This field is required";
+    }
 
     setFieldErrors((prev) => {
-      return { ...prev, [key]: message };
+      return { ...prev, [key]: msg };
     });
 
     setFormValues((prev) => {
@@ -42,9 +59,19 @@ export function AddNumForm() {
     setSum("");
   }, []);
 
+  /**
+   * **validateInput()**
+   * - Checks if field is empty
+   * - Tests whether value passes the pattern.
+   * - Sets error message on test failure.
+   *
+   * @params value, pattern and message
+   * @returns error obj
+   */
   const validateInput = useCallback(
     (value: string, pattern: RegExp, message: string) => {
       const error = { message: "", isError: false };
+
       if (pattern.test(value.trim())) {
         error.isError = true;
         error.message = message;
@@ -57,9 +84,13 @@ export function AddNumForm() {
     [],
   );
 
-  function calculateSum(e: any) {
-    e.preventDefault();
-
+  /**
+   * **calculateSum()**
+   * - Return early if filed errors are present
+   * - Extracts 1st and 2nd numbers.
+   * - Add 2 number and update the result
+   */
+  const calculateSum = useCallback(() => {
     const hasAnyError = Object.values(fieldErrors).some(
       (msg) => msg.length > 0,
     );
@@ -71,7 +102,7 @@ export function AddNumForm() {
     const result = addNum(Number(firstNum), Number(secondNum));
 
     setSum(String(result));
-  }
+  }, [fieldErrors, formValues]);
 
   /**
    * **reset()**
@@ -127,11 +158,12 @@ export function AddNumForm() {
               }}
               errorMessage={fieldErrors.secondNum}
             />
+
             <div className="flex flex-row gap-4">
               <button
-                onClick={(e) => calculateSum(e)}
-                type="submit"
-                className="p-1 px-4 rounded-full cursor-pointer shadow bg-amber-300 hover:bg-amber-400 w-fit"
+                onClick={calculateSum}
+                type="button"
+                className="p-1 px-4 rounded-full cursor-pointer shadow bg-green-300 hover:bg-green-400 w-fit"
               >
                 Calculate Sum
               </button>
@@ -147,6 +179,7 @@ export function AddNumForm() {
           </div>
         </fieldset>
       </form>
+
       <output className="border-2 border-dotted p-2 w-full text-center">
         {sum ? sum : "Number sum will be displayed here"}
       </output>
