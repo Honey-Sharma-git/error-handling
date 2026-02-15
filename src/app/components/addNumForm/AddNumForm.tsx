@@ -73,6 +73,24 @@ export function AddNumForm() {
     setSum(String(result));
   }
 
+  /**
+   * **reset()**
+   * - Resets form values and field errors
+   */
+  const reset = useCallback(() => {
+    setFormValues({
+      firstNum: "",
+      secondNum: "",
+    });
+
+    setFieldErrors({
+      firstNum: "",
+      secondNum: "",
+    });
+
+    setSum("");
+  }, []);
+
   return (
     <div className="m-2 border shadow rounded-lg flex flex-col gap-4 items-center justify-center p-4 w-100">
       <form>
@@ -109,14 +127,23 @@ export function AddNumForm() {
               }}
               errorMessage={fieldErrors.secondNum}
             />
+            <div className="flex flex-row gap-4">
+              <button
+                onClick={(e) => calculateSum(e)}
+                type="submit"
+                className="p-1 px-4 rounded-full cursor-pointer shadow bg-amber-300 hover:bg-amber-400 w-fit"
+              >
+                Calculate Sum
+              </button>
 
-            <button
-              onClick={(e) => calculateSum(e)}
-              type="submit"
-              className="p-1 px-4 rounded-full cursor-pointer shadow bg-amber-300 hover:bg-amber-400 w-fit"
-            >
-              Calculate Sum
-            </button>
+              <button
+                onClick={reset}
+                type="button"
+                className="p-1 px-4 rounded-full cursor-pointer shadow bg-red-300 hover:bg-red-400 w-fit"
+              >
+                Reset
+              </button>
+            </div>
           </div>
         </fieldset>
       </form>
