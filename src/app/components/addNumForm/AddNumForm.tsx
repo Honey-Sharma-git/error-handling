@@ -123,7 +123,7 @@ export function AddNumForm() {
   }, []);
 
   return (
-    <article className="shadow-md rounded-lg flex flex-col gap-4 items-center justify-center p-4 bg-card-background">
+    <article className="shadow-md rounded-lg flex flex-col gap-4 items-center justify-center p-4 bg-card-background max-w-fit">
       <form>
         <fieldset>
           <legend className="w-full text-center font-bold text-card-heading mb-5">
