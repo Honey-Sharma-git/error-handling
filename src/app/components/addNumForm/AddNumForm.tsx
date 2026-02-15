@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { InputField } from "../shared/InputField";
 import { addNum } from "@/app/utils/add";
 
@@ -14,6 +14,7 @@ interface FieldErrors {
 }
 
 export function AddNumForm() {
+  // Form value, error and sum states:
   const [formValues, setFormValues] = useState<FormValues>({
     firstNum: "",
     secondNum: "",
@@ -24,15 +25,31 @@ export function AddNumForm() {
   });
   const [sum, setSum] = useState<string>("");
 
+  /**
+   * **handleChange()**
+   * - Tracks values changes to show error on invalid input
+   * - Reset calculated value on value change.
+   * - Update form value state.
+   *
+   * @params form field key and its value
+   * @returns void
+   *
+   */
   const handleChange = useCallback((key: keyof FormValues, value: string) => {
-    const { isError, message } = validateInput(
+    let msg = "";
+    const { message } = validateInput(
       value,
-      /[^0-9]/g,
+      /[^0-9]/,
       "Please enter a valid number",
     );
+    msg = message;
+
+    if (value.trim() === "") {
+      msg = "This field is required";
+    }
 
     setFieldErrors((prev) => {
-      return { ...prev, [key]: message };
+      return { ...prev, [key]: msg };
     });
 
     setFormValues((prev) => {
@@ -42,9 +59,19 @@ export function AddNumForm() {
     setSum("");
   }, []);
 
+  /**
+   * **validateInput()**
+   * - Checks if field is empty
+   * - Tests whether value passes the pattern.
+   * - Sets error message on test failure.
+   *
+   * @params value, pattern and message
+   * @returns error obj
+   */
   const validateInput = useCallback(
     (value: string, pattern: RegExp, message: string) => {
       const error = { message: "", isError: false };
+
       if (pattern.test(value.trim())) {
         error.isError = true;
         error.message = message;
@@ -57,9 +84,13 @@ export function AddNumForm() {
     [],
   );
 
-  function calculateSum(e: any) {
-    e.preventDefault();
-
+  /**
+   * **calculateSum()**
+   * - Return early if filed errors are present
+   * - Extracts 1st and 2nd numbers.
+   * - Add 2 number and update the result
+   */
+  const calculateSum = useCallback(() => {
     const hasAnyError = Object.values(fieldErrors).some(
       (msg) => msg.length > 0,
     );
@@ -71,21 +102,41 @@ export function AddNumForm() {
     const result = addNum(Number(firstNum), Number(secondNum));
 
     setSum(String(result));
-  }
+  }, [fieldErrors, formValues]);
+
+  /**
+   * **reset()**
+   * - Resets form values and field errors
+   */
+  const reset = useCallback(() => {
+    setFormValues({
+      firstNum: "",
+      secondNum: "",
+    });
+
+    setFieldErrors({
+      firstNum: "",
+      secondNum: "",
+    });
+
+    setSum("");
+  }, []);
 
   return (
-    <div className="m-2 border shadow rounded-lg flex flex-col gap-4 items-center justify-center p-4 w-100">
+    <article className="shadow-md rounded-lg flex flex-col gap-4 items-center justify-center p-4 bg-card-background max-w-fit">
       <form>
         <fieldset>
-          <legend className="w-full text-center font-bold text-amber-600 mb-5">
+          <legend className="w-full text-center font-bold text-card-heading mb-5">
             Sum Two Numbers
           </legend>
 
           <div className="flex flex-col items-center gap-2">
             <InputField
               className={{
-                labelClasses: "text-pink-600",
-                inputClasses: "border-pink-600 focus-within:outline-pink-600",
+                errorMessageClasses: "text-input-validation-text",
+                labelClasses: "text-label",
+                inputClasses:
+                  "border-input-border focus-within:outline-input-border placeholder:text-input-placeholder text-text-color",
               }}
               label="Enter First Number:"
               placeholder="e.g 3"
@@ -98,8 +149,10 @@ export function AddNumForm() {
 
             <InputField
               className={{
-                labelClasses: "text-pink-600",
-                inputClasses: "border-pink-600 focus-within:outline-pink-600",
+                errorMessageClasses: "text-input-validation-text",
+                labelClasses: "text-label",
+                inputClasses:
+                  "border-input-border focus-within:outline-input-border placeholder:text-input-placeholder text-text-color",
               }}
               label="Enter Second Number:"
               placeholder="e.g 2"
@@ -110,19 +163,31 @@ export function AddNumForm() {
               errorMessage={fieldErrors.secondNum}
             />
 
-            <button
-              onClick={(e) => calculateSum(e)}
-              type="submit"
-              className="p-1 px-4 rounded-full cursor-pointer shadow bg-amber-300 hover:bg-amber-400 w-fit"
-            >
-              Calculate Sum
-            </button>
+            <div className="flex flex-row flex-wrap justify-center items-center gap-4">
+              <button
+                onClick={calculateSum}
+                type="button"
+                className="p-1 px-4 rounded-full cursor-pointer shadow bg-cta-button-background hover:bg-cta-button-background-hover w-fit text-cta-button-text"
+              >
+                Calculate Sum
+              </button>
+
+              <button
+                onClick={reset}
+                type="button"
+                className="p-1 px-4 rounded-full cursor-pointer shadow bg-danger-button-background hover:bg-danger-button-background-hover
+                text-danger-button-text w-fit"
+              >
+                Reset
+              </button>
+            </div>
           </div>
         </fieldset>
       </form>
-      <output className="border-2 border-dotted p-2 w-full text-center">
+
+      <output className="border-2 text-text-color border-dashed p-2 w-full text-center">
         {sum ? sum : "Number sum will be displayed here"}
       </output>
-    </div>
+    </article>
   );
 }
